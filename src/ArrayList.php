@@ -279,11 +279,11 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
      * 
      * @return static
      */
-    public function asort()
+    public function asort( $flag = SORT_REGULAR )
     {
         $array = $this->getArrayCopy();
 
-        asort( $array );
+        asort( $array, $flag );
 
         return $this->make( $array );
     }
@@ -293,11 +293,11 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
      * 
      * @return static
      */
-    public function ksort()
+    public function ksort( $flag = SORT_REGULAR )
     {
         $array = $this->getArrayCopy();
 
-        ksort( $array );
+        ksort( $array, $flag );
 
         return $this->make( $array );
     }
