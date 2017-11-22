@@ -1,0 +1,26 @@
+<phpunit 
+   backupGlobals="false"
+   backupStaticAttributes="false"
+   bootstrap="tests/phpunit.php"
+   colors="true"
+   convertErrorsToExceptions="true"
+   convertNoticesToExceptions="true"
+   convertWarningsToExceptions="true"
+   processIsolation="false"
+   stopOnFailure="false"
+   syntaxCheck="false"
+>
+   <testsuites>
+      <testsuite name="all">
+         <directory suffix="Test.php">./tests</directory>
+      </testsuite>
+      <testsuite name="setup">
+         <directory suffix="Test.php">./tests/setup</directory>
+      </testsuite>
+   </testsuites>
+   <filter>
+      <whitelist processUncoveredFilesFromWhitelist="true">
+         <directory suffix=".php">./src</directory>
+      </whitelist>
+   </filter>
+</phpunit>
