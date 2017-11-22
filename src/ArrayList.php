@@ -261,29 +261,17 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
     }
 
     /**
-     * Call a method on a copy of this object.
-     * 
-     * @param string $method Method name to call.
-     * @param mixed $parameter (optional) Call parameter.
-     * @return static
-     */
-    protected function callOnCopy( $method, ...$args )
-    {
-        $object = clone $this;
-
-        call_user_func_array( [ $object, $method ], $args );
-
-        return $object;
-    }
-
-    /**
      * Immutable version of append() for array objects.
      * 
      * @return static
      */
     public function append( $value )
     {
-        return $this->callOnCopy( 'append', $value );
+        $array = $this->getArrayCopy();
+
+        array_push( $array, $value );
+
+        return $this->make( $array );
     }
 
     /**
@@ -293,7 +281,11 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
      */
     public function asort()
     {
-        return $this->callOnCopy( 'asort' );
+        $array = $this->getArrayCopy();
+
+        asort( $array );
+
+        return $this->make( $array );
     }
 
     /**
@@ -303,7 +295,11 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
      */
     public function ksort()
     {
-        return $this->callOnCopy( 'ksort' );
+        $array = $this->getArrayCopy();
+
+        ksort( $array );
+
+        return $this->make( $array );
     }
 
     /**
@@ -313,7 +309,11 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
      */
     public function uasort( $cmp_function )
     {
-        return $this->callOnCopy( 'uasort', $cmp_function );
+        $array = $this->getArrayCopy();
+
+        uasort( $array, $cmp_function );
+
+        return $this->make( $array );
     }
 
     /**
@@ -323,7 +323,11 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
      */
     public function uksort( $cmp_function )
     {
-        return $this->callOnCopy( 'uksort', $cmp_function );
+        $array = $this->getArrayCopy();
+
+        uksort( $array, $cmp_function );
+
+        return $this->make( $array );
     }
 
     /**
@@ -333,7 +337,11 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
      */
     public function natsort()
     {
-        return $this->callOnCopy( 'natsort' );
+        $array = $this->getArrayCopy();
+
+        natsort( $array );
+
+        return $this->make( $array );
     }
 
     /**
@@ -343,7 +351,11 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
      */
     public function natcasesort()
     {
-        return $this->callOnCopy( 'natcasesort' );
+        $array = $this->getArrayCopy();
+
+        natcasesort( $array );
+
+        return $this->make( $array );
     }
 
     /**
