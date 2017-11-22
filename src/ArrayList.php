@@ -78,11 +78,16 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
 
     /**
      * Test if a given method (in camelCase or snake_case) can be converted to 
-     * an array function and execute it if such a function exists.
+     * an array function and execute it if such a function exists. Be aware that 
+     * not every array function makes sense in this object's context and thus 
+     * should be used with caution (e.g. array_combine(), array_diff()).
      * 
      * Note: Throws an exception if the used array function expects the array 
      *       to be given as a reference. (multisort, pop, push, shift, splice, 
      *       unshift, walk, walk_recursive)
+     * 
+     * Note: Also fails for fill, key_exists, and search since those use the 
+     *       array as second parameter.
      * 
      * @param string $name Method name.
      * @param array $args Method arguments.
@@ -93,12 +98,18 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
     {
         $fn = $this->funcFromMethod( $name );
 
-        if ( is_callable( $fn ) ) {
-            return $this->callFn( $fn, $args );
+        if ( ! is_callable( $fn ) ) {
+            $msg = "Method '$name' does not exist for arrays";
+            throw new \BadMethodCallException( $msg );
         }
 
-        $msg = "Method '$name' does not exist for arrays";
-        throw new \BadMethodCallException( $msg );
+        $result = $this->callFn( $fn, $args );
+
+        if ( is_array( $result ) ) {
+            $result = $this->make( $result );
+        }
+
+        return $result;
     }
 
     /**
@@ -127,9 +138,7 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
 
         array_unshift( $args, $this->getArrayCopy() );
 
-        $result = call_user_func_array( $fn, $args );
-
-        return $this->make( $result );
+        return call_user_func_array( $fn, $args );
     }
 
     /**
@@ -145,10 +154,12 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
     protected function validateFunction( callable $name )
     {
         $rf = new \ReflectionFunction( $name );
-        $param = $rf->getParameters();
+        $rp = $rf->getParameters();
 
-        if ( $param[ 0 ]->isPassedByReference() ) {
-            $msg = "Function '$name()' cannot be used on this array object.";
+        // canBePassedByValue() would allow array_multisort(),
+        // but that function doesn't make sense in this context
+        if ( $rp[ 0 ]->isPassedByReference() ) {
+            $msg = "Function '$name()' cannot be used on this array object";
             throw new \BadMethodCallException( $msg );
         }
     }
@@ -230,6 +241,17 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
     public function join( $separator = '' )
     {
         return implode( $separator, $this->getArrayCopy() );
+    }
+
+    /**
+     * Implementation of in_array().
+     * 
+     * @param mixed $value The value to test.
+     * @return boolean Whether the value exists in the array.
+     */
+    public function contains( $value )
+    {
+        return in_array( $value, $this->getArrayCopy(), true );
     }
 
     /**

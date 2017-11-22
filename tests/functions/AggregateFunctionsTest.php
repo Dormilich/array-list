@@ -28,4 +28,12 @@ class AggregateFunctionsTest extends TestCase
 
         $this->assertSame( '-a0-b1-c2-', $str );
     }
+
+    public function testContains()
+    {
+        $list = ArrayList::from( [ '1', '2', '3' ] );
+
+        $this->assertTrue( $list->contains( '2' ) );
+        $this->assertFalse( $list->contains( 2 ) );
+    }
 }
