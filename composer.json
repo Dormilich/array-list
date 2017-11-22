@@ -1,0 +1,25 @@
+{
+    "name": "dormilich/array-list",
+    "description": "A simple immutable PHP array iterator.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bertold von Dormilich",
+            "email": "Dormilich@netscape.net"
+        }
+    ],
+    "require": {
+        "php": "^5.6 || ^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dormilich\\Utilities\\": "src"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    }
+}
