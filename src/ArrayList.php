@@ -41,8 +41,6 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
      */
     public static function from( $input, $flags = 0 )
     {
-        $input = self::convert( $input );
-
         return new static( $input, $flags );
     }
 
@@ -73,7 +71,7 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
      */
     protected function make( array $data )
     {
-        return self::from( $data, $this->getFlags() );
+        return new static( $data, $this->getFlags() );
     }
 
     /**
