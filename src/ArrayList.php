@@ -163,6 +163,25 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
     }
 
     /**
+     * Call a function that operates on a reference of the data array.
+     * 
+     * @param callable $fn The function to execute.
+     * @return static
+     */
+    protected function callOnReference( callable $fn )
+    {
+        $array = $this->getArrayCopy();
+
+        if ( func_num_args() === 1 ) {
+            $fn( $array );
+        } else {
+            $fn( $array, func_get_arg( 1 ) );
+        }
+
+        return $this->make( $array );
+    }
+
+    /**
      * An implementation of array_map() that works as you would expect from the 
      * other array functions.
      * 
@@ -259,95 +278,73 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
      */
     public function shuffle()
     {
-        $array = $this->getArrayCopy();
-
-        shuffle( $array );
-
-        return $this->make( $array );
+        return $this->callOnReference( 'shuffle' );
     }
 
     /**
      * Immutable version of array_unshift().
      * 
+     * @param mixed $value The value to prepend.
      * @return static
      */
     public function prepend( $value )
     {
-        $array = $this->getArrayCopy();
-
-        array_unshift( $array, $value );
-
-        return $this->make( $array );
+        return $this->callOnReference( 'array_unshift', $value );
     }
 
     /**
      * Immutable version of append() for array objects.
      * 
+     * @param mixed $value The value to append.
      * @return static
      */
     public function append( $value )
     {
-        $array = $this->getArrayCopy();
-
-        array_push( $array, $value );
-
-        return $this->make( $array );
+        return $this->callOnReference( 'array_push', $value );
     }
 
     /**
      * Immutable version of asort() for array objects.
      * 
+     * @param integer $flag Sort flag.
      * @return static
      */
     public function asort( $flag = SORT_REGULAR )
     {
-        $array = $this->getArrayCopy();
-
-        asort( $array, $flag );
-
-        return $this->make( $array );
+        return $this->callOnReference( 'asort', $flag );
     }
 
     /**
      * Immutable version of ksort() for array objects.
      * 
+     * @param integer $flag Sort flag.
      * @return static
      */
     public function ksort( $flag = SORT_REGULAR )
     {
-        $array = $this->getArrayCopy();
-
-        ksort( $array, $flag );
-
-        return $this->make( $array );
+        return $this->callOnReference( 'ksort', $flag );
     }
 
     /**
      * Immutable version of uasort() for array objects.
      * 
+     * @param callable $cmp_function
      * @return static
      */
     public function uasort( $cmp_function )
     {
-        $array = $this->getArrayCopy();
-
-        uasort( $array, $cmp_function );
-
-        return $this->make( $array );
+        return $this->callOnReference( 'uasort', $cmp_function );
     }
 
     /**
      * Immutable version of uksort() for array objects.
      * 
+     * @param callable $cmp_function
      * @return static
      */
     public function uksort( $cmp_function )
     {
-        $array = $this->getArrayCopy();
-
-        uksort( $array, $cmp_function );
-
-        return $this->make( $array );
+        return $this->callOnReference( 'uksort', $cmp_function );
     }
 
     /**
@@ -357,11 +354,7 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
      */
     public function natsort()
     {
-        $array = $this->getArrayCopy();
-
-        natsort( $array );
-
-        return $this->make( $array );
+        return $this->callOnReference( 'natsort' );
     }
 
     /**
@@ -371,11 +364,7 @@ class ArrayList extends \ArrayIterator implements \JsonSerializable
      */
     public function natcasesort()
     {
-        $array = $this->getArrayCopy();
-
-        natcasesort( $array );
-
-        return $this->make( $array );
+        return $this->callOnReference( 'natcasesort' );
     }
 
     /**
