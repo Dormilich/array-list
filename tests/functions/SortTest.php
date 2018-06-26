@@ -59,7 +59,7 @@ class SortTest extends TestCase
         $array = [ 'b' => 'x', 'a' => 'y', 'c' => 'z' ];
 
         $a = ArrayList::from( $array );
-        $b = $a->uasort( 'strcmp' );
+        $b = $a->uksort( 'strcmp' );
 
         $exp = [ 'a' => 'y', 'b' => 'x', 'c' => 'z' ];
 
